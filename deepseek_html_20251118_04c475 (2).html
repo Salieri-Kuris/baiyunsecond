@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>白云飞巴 - 拼车小程序</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1A73E8, #0d47a1);
+            border-radius: 12px;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .pages-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .page-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        
+        .page-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #1A73E8, #0d47a1);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .page-number {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .page-content {
+            padding: 20px;
+            min-height: 500px;
+        }
+        
+        /* 登录页面样式 */
+        .login-container {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background-color: #1A73E8;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+        }
+        
+        .login-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .login-subtitle {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        
+        .user-info {
+            background-color: #f0f7ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .user-info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        
+        .user-info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .agreement {
+            display: flex;
+            align-items: flex-start;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 13px;
+        }
+        
+        .agreement-checkbox {
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+        
+        .agreement-text {
+            color: #666;
+        }
+        
+        .agreement-text a {
+            color: #1A73E8;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background-color: #1A73E8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* 拼单页面样式 */
+        .form-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .recommendation {
+            background-color: #e3f2fd;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: #1A73E8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* 地点选择器样式 - 非滚轮式 */
+        .location-picker-container {
+            margin-top: 8px;
+        }
+        
+        .location-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .location-option {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: white;
+        }
+        
+        .location-option:hover {
+            border-color: #1A73E8;
+            background-color: #f0f7ff;
+        }
+        
+        .location-option.active {
+            border-color: #1A73E8;
+            background-color: #e3f2fd;
+            color: #1A73E8;
+            font-weight: bold;
+        }
+        
+        .location-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .location-option.active .location-icon {
+            background-color: #1A73E8;
+            color: white;
+        }
+        
+        .location-details {
+            flex: 1;
+        }
+        
+        .location-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .location-description {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .time-selection {
+            margin-top: 10px;
+        }
+        
+        .time-display {
+            background-color: #f0f7ff;
+            border: 1px solid #1A73E8;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #1A73E8;
+        }
+        
+        .time-picker {
+            display: flex;
+            gap: 10px;
+            height: 200px;
+        }
+        
+        .date-picker, .time-picker-section {
+            flex: 1;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .date-picker {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .date-option {
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s;
+        }
+        
+        .date-option:last-child {
+            border-bottom: none;
+        }
+        
+        .date-option.active {
+            background-color: #1A73E8;
+            color: white;
+        }
+        
+        .time-picker-section {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 180px;
+        }
+        
+        .time-picker-section::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .time-picker-section::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 3px;
+        }
+        
+        .time-option {
+            padding: 10px 8px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s;
+            font-size: 13px;
+            position: relative;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .time-option:last-child {
+            border-bottom: none;
+        }
+        
+        .time-option.active {
+            background-color: #1A73E8;
+            color: white;
+        }
+        
+        .time-option.recommended {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            font-weight: bold;
+            order: -1;
+        }
+        
+        .time-option.recommended::before {
+            content: "推荐";
+            position: absolute;
+            top: 2px;
+            right: 5px;
+            font-size: 10px;
+            color: #4caf50;
+            background-color: rgba(76, 175, 80, 0.1);
+            padding: 1px 4px;
+            border-radius: 4px;
+        }
+        
+        .time-option.recommended.active {
+            background-color: #4caf50;
+            color: white;
+        }
+        
+        .time-option.recommended.active::before {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .counter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 8px 12px;
+        }
+        
+        .counter-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .counter-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .price-section {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .price-total {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1A73E8;
+            border-top: 1px solid #ddd;
+            padding-top: 8px;
+        }
+        
+        .coupon-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        /* 拼单中页面样式 */
+        .matching-container {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        
+        .matching-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background-color: #e3f2fd;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1A73E8;
+            font-size: 36px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .matching-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .matching-subtitle {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .progress-container {
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            height: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #1A73E8;
+            border-radius: 10px;
+            width: 60%;
+            animation: progress 3s ease-in-out infinite;
+        }
+        
+        @keyframes progress {
+            0% { width: 30%; }
+            50% { width: 70%; }
+            100% { width: 30%; }
+        }
+        
+        .rules-carousel {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 20px;
+            position: relative;
+            height: 80px;
+            overflow: hidden;
+        }
+        
+        .rule-item {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .rule-item.active {
+            opacity: 1;
+        }
+        
+        .cancel-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: white;
+            color: #ff5252;
+            border: 1px solid #ff5252;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .cancel-btn:hover {
+            background-color: #ffebee;
+        }
+        
+        /* 拼单成功页面样式 */
+        .success-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .success-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            background-color: #e8f5e9;
+            border-radius: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4caf50;
+            font-size: 30px;
+        }
+        
+        .success-title {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .success-subtitle {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .trip-info {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .info-label {
+            color: #666;
+        }
+        
+        .info-value {
+            font-weight: bold;
+        }
+        
+        .location-detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .location-detail i {
+            color: #1A73E8;
+            margin-top: 2px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .btn-primary {
+            background-color: #1A73E8;
+            color: white;
+            border: none;
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: #1A73E8;
+            border: 1px solid #1A73E8;
+        }
+        
+        .qrcode-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            display: none;
+        }
+        
+        .qrcode-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .qrcode {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            background: 
+                radial-gradient(circle at 50% 50%, #f5f5f5 0%, #e0e0e0 100%),
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.5) 10px, rgba(255,255,255,0.5) 20px);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .qrcode::before {
+            content: "";
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            background: 
+                linear-gradient(45deg, transparent 45%, #1A73E8 45%, #1A73E8 55%, transparent 55%),
+                linear-gradient(-45deg, transparent 45%, #1A73E8 45%, #1A73E8 55%, transparent 55%);
+            background-size: 20px 20px;
+        }
+        
+        .qrcode-logo {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #1A73E8;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .qrcode-note {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        /* 拼车失败页面样式 */
+        .failure-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .failure-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background-color: #ffebee;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f44336;
+            font-size: 36px;
+        }
+        
+        .failure-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .failure-subtitle {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        
+        /* 乘车页面样式 */
+        .ride-container {
+            padding: 20px;
+        }
+        
+        .map-container {
+            height: 150px;
+            background-color: #e3f2fd;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1A73E8;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .eta-container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .eta-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .eta-time {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1A73E8;
+        }
+        
+        .driver-info {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .driver-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background-color: #e3f2fd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1A73E8;
+            font-size: 20px;
+        }
+        
+        .driver-details {
+            flex: 1;
+        }
+        
+        .driver-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .driver-car {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+        
+        .driver-plate {
+            color: #1A73E8;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .driver-rating {
+            color: #ff9800;
+            font-size: 13px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>白云飞巴拼车小程序</h1>
+            <p class="subtitle">6个核心页面完整展示 - 已优化出发地选择功能</p>
+        </header>
+        
+        <div class="pages-container">
+            <!-- 页面1: 登录页面 -->
+            <div class="page-card">
+                <div class="page-header">
+                    <div class="page-title">登录页面</div>
+                    <div class="page-number">1/6</div>
+                </div>
+                <div class="page-content">
+                    <div class="login-container">
+                        <div class="login-logo">
+                            <i class="fas fa-bus"></i>
+                        </div>
+                        <h2 class="login-title">欢迎使用白云飞巴</h2>
+                        <p class="login-subtitle">机场定制客运拼车服务</p>
+                        
+                        <div class="user-info">
+                            <div class="user-info-item">
+                                <span>姓名</span>
+                                <span>张**</span>
+                            </div>
+                            <div class="user-info-item">
+                                <span>手机号</span>
+                                <span>138****5678</span>
+                            </div>
+                            <div class="user-info-item">
+                                <span>身份证</span>
+                                <span>4401**********1234</span>
+                            </div>
+                        </div>
+                        
+                        <div class="agreement">
+                            <input type="checkbox" id="agreement" class="agreement-checkbox" checked>
+                            <label for="agreement" class="agreement-text">
+                                我已阅读并同意 <a href="#">《白云飞巴用户协议》</a> 和 <a href="#">《隐私政策》</a>，并默认注册机场通会员
+                            </label>
+                        </div>
+                        
+                        <button class="btn-primary">一键登录</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 页面2: 拼单页面（已优化出发地选择功能） -->
+            <div class="page-card">
+                <div class="page-header">
+                    <div class="page-title">拼单页面</div>
+                    <div class="page-number">2/6</div>
+                </div>
+                <div class="page-content">
+                    <h3 class="form-title">填写行程信息</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">航班号</label>
+                        <input type="text" class="form-input" placeholder="请输入航班号">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">出发地</label>
+                        <input type="text" class="form-input" id="departureInput" placeholder="请选择出发地" readonly>
+                        <div class="recommendation">
+                            <i class="fas fa-info-circle"></i>
+                            <span>根据您的航班号推荐，可手动修改</span>
+                        </div>
+                        
+                        <!-- 非滚轮式地点选择器 -->
+                        <div class="location-picker-container">
+                            <div class="location-options">
+                                <div class="location-option active" data-location="白云机场T2GTC">
+                                    <div class="location-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="location-details">
+                                        <div class="location-name">白云机场T2GTC</div>
+                                        <div class="location-description">T2航站楼地面交通中心</div>
+                                    </div>
+                                </div>
+                                <div class="location-option" data-location="白云机场T3GTC">
+                                    <div class="location-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="location-details">
+                                        <div class="location-name">白云机场T3GTC</div>
+                                        <div class="location-description">T3航站楼地面交通中心</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">到达地</label>
+                        <input type="text" class="form-input" placeholder="请输入目的地">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">乘车时间</label>
+                        <div class="time-selection">
+                            <div class="time-display" id="selectedTime">
+                                11月18日 今天 23:00-23:15
+                            </div>
+                            <div class="time-picker">
+                                <div class="date-picker">
+                                    <div class="date-option active" data-date="today">11月18日 今天</div>
+                                    <div class="date-option" data-date="tomorrow">11月19日 明天</div>
+                                </div>
+                                <div class="time-picker-section" id="todayTimes">
+                                    <!-- 今天的时间段 - 推荐时间之前的时间放在前面 -->
+                                    <div class="time-option">22:00-22:15</div>
+                                    <div class="time-option">22:15-22:30</div>
+                                    <div class="time-option">22:30-22:45</div>
+                                    <div class="time-option">22:45-23:00</div>
+                                    <div class="time-option recommended active">23:00-23:15</div>
+                                    <div class="time-option">23:15-23:30</div>
+                                    <div class="time-option">23:30-23:45</div>
+                                    <div class="time-option">23:45-24:00</div>
+                                </div>
+                                <div class="time-picker-section" id="tomorrowTimes" style="display: none;">
+                                    <!-- 明天的时间段 -->
+                                    <div class="time-option">00:00-00:15</div>
+                                    <div class="time-option">00:15-00:30</div>
+                                    <div class="time-option">00:30-00:45</div>
+                                    <div class="time-option">00:45-01:00</div>
+                                    <div class="time-option">01:00-01:15</div>
+                                    <div class="time-option">01:15-01:30</div>
+                                    <div class="time-option">01:30-01:45</div>
+                                    <div class="time-option">01:45-02:00</div>
+                                    <div class="time-option">02:00-02:15</div>
+                                    <div class="time-option">02:15-02:30</div>
+                                    <div class="time-option">02:30-02:45</div>
+                                    <div class="time-option">02:45-03:00</div>
+                                    <div class="time-option">03:00-03:15</div>
+                                    <div class="time-option">03:15-03:30</div>
+                                    <div class="time-option">03:30-03:45</div>
+                                    <div class="time-option">03:45-04:00</div>
+                                    <div class="time-option">04:00-04:15</div>
+                                    <div class="time-option">04:15-04:30</div>
+                                    <div class="time-option">04:30-04:45</div>
+                                    <div class="time-option">04:45-05:00</div>
+                                    <div class="time-option">05:00-05:15</div>
+                                    <div class="time-option">05:15-05:30</div>
+                                    <div class="time-option">05:30-05:45</div>
+                                    <div class="time-option">05:45-06:00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">乘车人数</label>
+                        <div class="counter">
+                            <div class="counter-btn">-</div>
+                            <div class="counter-value">1</div>
+                            <div class="counter-btn">+</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">行李数量</label>
+                        <div class="counter">
+                            <div class="counter-btn">-</div>
+                            <div class="counter-value">1</div>
+                            <div class="counter-btn">+</div>
+                        </div>
+                    </div>
+                    
+                    <div class="price-section">
+                        <div class="price-row price-total">
+                            <span>总计</span>
+                            <span>¥35</span>
+                        </div>
+                    </div>
+                    
+                    <div class="coupon-section">
+                        <span>优惠券</span>
+                        <span>无可用 <i class="fas fa-chevron-right"></i></span>
+                    </div>
+                    
+                    <button class="btn-primary">立即付款</button>
+                </div>
+            </div>
+            
+            <!-- 页面3: 拼单中页面 -->
+            <div class="page-card">
+                <div class="page-header">
+                    <div class="page-title">拼单中页面</div>
+                    <div class="page-number">3/6</div>
+                </div>
+                <div class="page-content">
+                    <div class="matching-container">
+                        <div class="matching-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h2 class="matching-title">正在为您拼车</h2>
+                        <p class="matching-subtitle">还差 <span style="color: #1A73E8; font-weight: bold;">1</span> 人即可拼单成功</p>
+                        
+                        <div class="progress-container">
+                            <div class="progress-bar"></div>
+                        </div>
+                        
+                        <p style="font-size: 14px;">预计等待时间：<span style="color: #1A73E8; font-weight: bold;">2-5</span> 分钟</p>
+                        
+                        <div class="rules-carousel">
+                            <div class="rule-item active">拼车成功，发车前两个小时以上取消拼车则退回全部金额</div>
+                            <div class="rule-item">发车前两个小时以内取消拼车，则需支付20%的手续费</div>
+                        </div>
+                        
+                        <button class="cancel-btn">
+                            <i class="fas fa-times-circle"></i>
+                            取消拼单
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 页面4: 拼单成功页面 -->
+            <div class="page-card">
+                <div class="page-header">
+                    <div class="page-title">拼单成功页面</div>
+                    <div class="page-number">4/6</div>
+                </div>
+                <div class="page-content">
+                    <div class="success-container">
+                        <div class="success-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h2 class="success-title">拼单成功！</h2>
+                        <p class="success-subtitle">司机正在赶来，请提前到达上车点</p>
+                        
+                        <div class="trip-info">
+                            <div class="info-item">
+                                <span class="info-label">车牌号</span>
+                                <span class="info-value">粤A·B1234</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">上车时间</span>
+                                <span class="info-value">23:00</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">上车地点</span>
+                                <div class="location-detail">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span class="info-value">白云机场T2GTC</span>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">下车地点</span>
+                                <div class="location-detail">
+                                    <i class="fas fa-flag-checkered"></i>
+                                    <span class="info-value">白云百信广场</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-map-marked-alt"></i>
+                                到这去
+                            </button>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-ticket-alt"></i>
+                                验票
+                            </button>
+                        </div>
+                        
+                        <div class="qrcode-container" style="display: block;">
+                            <div class="qrcode-title">乘车二维码</div>
+                            <div class="qrcode">
+                                <div class="qrcode-logo">
+                                    <i class="fas fa-bus"></i>
+                                </div>
+                            </div>
+                            <p class="qrcode-note">请向司机出示此二维码</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 页面5: 拼车失败页面 -->
+            <div class="page-card">
+                <div class="page-header">
+                    <div class="page-title">拼车失败页面</div>
+                    <div class="page-number">5/6</div>
+                </div>
+                <div class="page-content">
+                    <div class="failure-container">
+                        <div class="failure-icon">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <h2 class="failure-title">拼车失败</h2>
+                        <p class="failure-subtitle">很抱歉，暂时没有匹配到合适的拼车伙伴</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 页面6: 乘车页面 -->
+            <div class="page-card">
+                <div class="page-header">
+                    <div class="page-title">乘车页面</div>
+                    <div class="page-number">6/6</div>
+                </div>
+                <div class="page-content">
+                    <div class="ride-container">
+                        <div class="map-container">
+                            [实时地图导航]
+                        </div>
+                        
+                        <div class="eta-container">
+                            <div class="eta-title">预计到达时间</div>
+                            <div class="eta-time">23:40</div>
+                            <div style="margin-top: 8px; color: #666; font-size: 13px;">剩余距离：12公里</div>
+                        </div>
+                        
+                        <div class="driver-info">
+                            <div class="driver-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="driver-details">
+                                <div class="driver-name">李师傅</div>
+                                <div class="driver-car">白色</div>
+                                <div class="driver-plate">车牌号：粤A·B1234</div>
+                                <div class="driver-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    4.8
+                                </div>
+                            </div>
+                            <div>
+                                <i class="fas fa-phone-alt" style="color: #1A73E8; font-size: 18px;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>白云飞巴拼车小程序 - 为您的机场出行提供安全便捷的服务</p>
+            <p>© 2023 白云飞巴 版权所有</p>
+        </footer>
+    </div>
+
+    <script>
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化地点选择器
+            initLocationPicker();
+            
+            // 日期选择
+            const dateOptions = document.querySelectorAll('.date-option');
+            const todayTimes = document.getElementById('todayTimes');
+            const tomorrowTimes = document.getElementById('tomorrowTimes');
+            
+            dateOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除所有active类
+                    dateOptions.forEach(opt => opt.classList.remove('active'));
+                    // 添加active类到当前选项
+                    this.classList.add('active');
+                    
+                    // 显示对应的时间段
+                    if (this.dataset.date === 'today') {
+                        todayTimes.style.display = 'flex';
+                        tomorrowTimes.style.display = 'none';
+                    } else {
+                        todayTimes.style.display = 'none';
+                        tomorrowTimes.style.display = 'flex';
+                    }
+                });
+            });
+            
+            // 时间选择
+            const timeOptions = document.querySelectorAll('.time-option');
+            const selectedTimeDisplay = document.getElementById('selectedTime');
+            
+            timeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除所有active类
+                    timeOptions.forEach(opt => opt.classList.remove('active'));
+                    // 添加active类到当前选项
+                    this.classList.add('active');
+                    
+                    // 更新显示的时间
+                    const date = document.querySelector('.date-option.active').textContent;
+                    const time = this.textContent;
+                    selectedTimeDisplay.textContent = `${date} ${time}`;
+                });
+            });
+            
+            // 计数器功能
+            const counterBtns = document.querySelectorAll('.counter-btn');
+            counterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const counter = this.parentElement;
+                    const valueElement = counter.querySelector('.counter-value');
+                    let value = parseInt(valueElement.textContent);
+                    
+                    if (this.textContent === '+') {
+                        value++;
+                    } else if (this.textContent === '-' && value > 1) {
+                        value--;
+                    }
+                    
+                    valueElement.textContent = value;
+                });
+            });
+            
+            // 规则轮播
+            const ruleItems = document.querySelectorAll('.rule-item');
+            let currentRuleIndex = 0;
+            
+            function showNextRule() {
+                ruleItems[currentRuleIndex].classList.remove('active');
+                currentRuleIndex = (currentRuleIndex + 1) % ruleItems.length;
+                ruleItems[currentRuleIndex].classList.add('active');
+            }
+            
+            setInterval(showNextRule, 3000);
+        });
+
+        // 初始化地点选择器
+        function initLocationPicker() {
+            const locationOptions = document.querySelectorAll('.location-option');
+            const departureInput = document.getElementById('departureInput');
+            
+            // 设置初始值
+            departureInput.value = '白云机场T2GTC';
+            
+            // 地点选择交互
+            locationOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除所有active类
+                    locationOptions.forEach(opt => opt.classList.remove('active'));
+                    // 添加active类到当前选项
+                    this.classList.add('active');
+                    
+                    // 更新输入框的值
+                    departureInput.value = this.dataset.location;
+                });
+            });
+        }
+    </script>
+</body>
+</html>
